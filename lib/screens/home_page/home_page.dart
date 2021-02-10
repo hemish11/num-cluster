@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:num_cluster/screens/home_page/components/drawer.dart';
+import 'package:num_cluster/screens/home_page/components/drawer_button.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,8 +12,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: CustomDrawer(),
-      body: Center(
-        child: Text('Hello World'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const DrawerButton(),
+          ],
+        ),
       ),
     );
   }
