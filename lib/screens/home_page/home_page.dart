@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:num_cluster/colors.dart';
 import 'package:num_cluster/screens/home_page/components/drawer.dart';
 import 'package:num_cluster/screens/home_page/components/drawer_button.dart';
 
@@ -15,7 +16,17 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            const DrawerButton(),
+            Row(
+              children: [
+                const DrawerButton(),
+                const Spacer(),
+                Text(
+                  'Num Cluster',
+                  style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700, color: CustomColors.primaryColor),
+                ),
+                const SizedBox(width: 40),
+              ],
+            ),
           ],
         ),
       ),
