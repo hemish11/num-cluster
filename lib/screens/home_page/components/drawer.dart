@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:num_cluster/colors.dart';
 import 'package:num_cluster/screens/home_page/components/drawer_tile.dart';
-import 'package:num_cluster/screens/home_page/components/github_button.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -35,11 +34,9 @@ class CustomDrawer extends StatelessWidget {
             DrawerTile(text: 'Subtraction', isSelected: false),
             DrawerTile(text: 'Product', isSelected: false),
             DrawerTile(text: 'Transpose', isSelected: true),
-            DrawerTile(text: 'Inverse', isSelected: false),
+            DrawerTile(text: 'Adjoint', isSelected: false),
             DrawerTile(text: 'Determinant', isSelected: false),
-            const Spacer(),
-            const ExitButton(),
-            const SizedBox(height: 30),
+            DrawerTile(text: 'Inverse', isSelected: false),
           ],
         ),
       ),
