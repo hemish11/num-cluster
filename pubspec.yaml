@@ -24,8 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
+  dotted_border: ^1.0.7
   flutter_feather_icons: ^1.0.3
-  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:
