@@ -3,9 +3,9 @@ import 'package:num_cluster/colors.dart';
 
 class MatrixInput extends StatelessWidget {
   final bool isVisible;
-  final GestureTapCallback backPressed;
+  final GestureTapCallback donePressed;
 
-  const MatrixInput({Key key, this.isVisible = false, this.backPressed}) : super(key: key);
+  const MatrixInput({Key key, this.isVisible = false, this.donePressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class MatrixInput extends StatelessWidget {
                           color: CustomColors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(35),
-                            onTap: backPressed,
+                            onTap: donePressed,
                             child: Center(
                               child: Text('Done', style: TextStyle(fontSize: 26, color: CustomColors.blackColor)),
                             ),

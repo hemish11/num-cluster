@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
           ),
           MatrixInput(
             isVisible: isMatrixInputVisible,
-            backPressed: () => setState(() => isMatrixInputVisible = !isMatrixInputVisible),
+            donePressed: () => setState(() => isMatrixInputVisible = !isMatrixInputVisible),
           ),
         ],
       ),
