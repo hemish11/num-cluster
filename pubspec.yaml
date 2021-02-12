@@ -26,6 +26,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   dotted_border: ^1.0.7
   flutter_feather_icons: ^1.0.3
+  flutter_math: ^0.2.1
 
 dev_dependencies:
   flutter_test:
