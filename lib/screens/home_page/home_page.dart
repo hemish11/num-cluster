@@ -5,6 +5,7 @@ import 'package:num_cluster/screens/home_page/components/drawer.dart';
 import 'package:num_cluster/screens/home_page/components/drawer_button.dart';
 import 'package:num_cluster/screens/home_page/components/matrix_input.dart';
 import 'package:num_cluster/screens/home_page/components/matrix_input_button.dart';
+import 'package:num_cluster/screens/solution_page/solution_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -99,13 +100,25 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(width: 4, color: CustomColors.whiteColor),
                           ),
-                          child: Center(
-                            child: Text(
-                              'Calculate',
-                              style: TextStyle(
-                                fontSize: 28,
-                                color: CustomColors.whiteColor,
-                                fontWeight: FontWeight.w700,
+                          child: Material(
+                            color: CustomColors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SolutionPage(),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Calculate',
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                    color: CustomColors.whiteColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
