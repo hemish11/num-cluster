@@ -12,8 +12,6 @@ class _SolutionPageState extends State<SolutionPage> {
   PageController _controller;
   int currentIndex = 0;
 
-  //TODO: Check for page index
-
   @override
   void initState() {
     _controller = PageController();
