@@ -153,11 +153,12 @@ class _SolutionPageState extends State<SolutionPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
-                        _controller.animateToPage(
-                          --currentIndex,
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.linear,
-                        );
+                        if (currentIndex != 0)
+                          _controller.animateToPage(
+                            --currentIndex,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.linear,
+                          );
                       },
                       child: Center(
                         child: Text(
@@ -184,11 +185,12 @@ class _SolutionPageState extends State<SolutionPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
-                        _controller.animateToPage(
-                          ++currentIndex,
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.linear,
-                        );
+                        if (currentIndex != 2)
+                          _controller.animateToPage(
+                            ++currentIndex,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.linear,
+                          );
                       },
                       child: Center(
                         child: Text(
