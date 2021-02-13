@@ -43,14 +43,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 30),
                 MatrixInputButton(
-                  text: 'Input Matrix 1',
+                  text: 'Input Matrix A',
                   onTap: () => setState(() {
                     isMatrixInputVisible = !isMatrixInputVisible;
                   }),
                 ),
                 const SizedBox(height: 30),
                 MatrixInputButton(
-                  text: 'Input Matrix 2',
+                  text: 'Input Matrix B',
                   hasBorder: true,
                   onTap: () => setState(() {
                     isMatrixInputVisible = !isMatrixInputVisible;

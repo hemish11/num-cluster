@@ -85,7 +85,7 @@ class _SolutionPageState extends State<SolutionPage> {
             ),
             const SizedBox(height: 25),
             SizedBox(
-              height: size.height * 0.5,
+              height: size.height * 0.47,
               width: size.width * 0.95,
               child: PageView.builder(
                 itemCount: 3,
@@ -119,15 +119,16 @@ class _SolutionPageState extends State<SolutionPage> {
             const SizedBox(height: 20),
             SizedBox(
               height: 10,
-              width: (5 * 30).toDouble(),
+              width: (20 * 20).toDouble(),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 5,
+                itemCount: 20,
                 itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: AnimatedContainer(
                     height: 10,
-                    width: 10,
+                    width: index == 2 ? 15 : 10,
+                    duration: const Duration(milliseconds: 300),
                     decoration: BoxDecoration(
                       color: index == 2 ? CustomColors.primaryColor : CustomColors.whiteColor,
                       borderRadius: BorderRadius.circular(5),
