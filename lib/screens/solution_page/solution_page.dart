@@ -13,7 +13,6 @@ class _SolutionPageState extends State<SolutionPage> {
   int currentIndex = 0;
 
   //TODO: Check for page index
-  //TODO: Add the dots above the next btn
 
   @override
   void initState() {
@@ -87,7 +86,7 @@ class _SolutionPageState extends State<SolutionPage> {
             const SizedBox(height: 25),
             SizedBox(
               height: size.height * 0.5,
-              width: size.width * 0.9,
+              width: size.width * 0.95,
               child: PageView.builder(
                 itemCount: 3,
                 controller: _controller,
@@ -113,6 +112,27 @@ class _SolutionPageState extends State<SolutionPage> {
                         textStyle: TextStyle(fontSize: 26, color: CustomColors.whiteColor, fontWeight: FontWeight.w500),
                       ),
                     ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 10,
+              width: (5 * 30).toDouble(),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Container(
+                    height: 10,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: index == 2 ? CustomColors.primaryColor : CustomColors.whiteColor,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(width: 2, color: CustomColors.primaryColor),
+                    ),
                   ),
                 ),
               ),
