@@ -40,6 +40,127 @@ class Matrix {
     return steps;
   }
 
+  static Map<String, dynamic> getCofactor(List<List<num>> matrix, int p, int q) {
+    Map<String, dynamic> result = {'matrix': <List<num>>[], 'step': ''};
+    List<List<num>> temp = <List<num>>[];
+    String step = '\\begin{vmatrix}';
+    int a = 0;
+    int b = 0;
+
+    for (int i = 0; i < matrix[0].length - 1; i++) {
+      temp.add([]);
+      for (int j = 0; j < matrix[0].length - 1; j++) {
+        temp[i].add(0);
+      }
+    }
+
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix.length; j++) {
+        if (i != p && j != q) {
+          temp[a][b] = matrix[i][j];
+          step += '${matrix[i][j]}';
+
+          if (b == matrix.length - 2) {
+            step += '\\\\';
+
+            b = 0;
+            a++;
+          } else {
+            step += '&';
+
+            b++;
+          }
+        }
+      }
+    }
+
+    step += '\\end{vmatrix}';
+    step = step.replaceAll('\\\\\\end{vmatrix}', '\\end{vmatrix}');
+    result['matrix'] = temp;
+    result['step'] = step;
+
+    return result;
+  }
+
+  static Map<String, dynamic> calculateDeterminant(List<List<num>> matrix, {List<String> steps}) {
+    Map<String, dynamic> result = {'steps': <String>[], 'answer': 0};
+    Map<String, dynamic> cofactor = <String, dynamic>{};
+    String step = '\\begin{vmatrix}';
+    int sign = 1;
+    int determinant = 0;
+
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
+        step += '${matrix[i][j]}';
+
+        if (j != matrix[i].length - 1) step += '&';
+      }
+
+      if (i != matrix[i].length - 1) step += '\\\\';
+    }
+
+    step += '\\end{vmatrix}=';
+
+    if (steps == null) steps = [];
+
+    if (matrix.length == 1) {
+      result['steps'].add('D = ${matrix[0][0]}');
+      result['answer'] = matrix[0][0];
+
+      return result;
+    }
+
+    for (int i = 0; i < matrix.length; i++) {
+      cofactor = getCofactor(matrix, 0, i);
+      determinant += sign * matrix[0][i] * calculateDeterminant(cofactor['matrix'], steps: steps)['answer'];
+
+      if (sign == 1) {
+        if (i == 0) {
+          step += '${matrix[0][i]} * ${cofactor['step']}';
+        } else {
+          step += ' + ${matrix[0][i]} * ${cofactor['step']}';
+        }
+
+        sign *= -1;
+      } else {
+        step += ' - ${matrix[0][i]} * ${cofactor['step']}';
+        sign *= -1;
+      }
+    }
+
+    steps.add(step);
+
+    result['steps'] += steps;
+    result['steps'] = result['steps'].reversed.toList();
+    result['answer'] = determinant;
+
+    return result;
+  }
+
+  static Map<String, dynamic> determinant(List<List<num>> matrix) {
+    Map<String, dynamic> det = calculateDeterminant(matrix);
+
+    String step = '';
+    step = '\\begin{vmatrix}';
+
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
+        step += '${matrix[i][j]}';
+
+        if (j != matrix[i].length - 1) step += '&';
+      }
+
+      if (i != matrix[i].length - 1) step += '\\\\';
+    }
+
+    step += '\\end{vmatrix}=${det['answer']}';
+
+    return <String, dynamic>{
+      'steps': det['steps'] + [step],
+      'answer': det['answer'],
+    };
+  }
+
   static List<String> subtract(List<List<num>> matrix1, List<List<num>> matrix2) {
     List<String> steps = <String>[];
     String answer = '\\begin{bmatrix}';
