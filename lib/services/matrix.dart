@@ -140,8 +140,7 @@ class Matrix {
   static Map<String, dynamic> determinant(List<List<num>> matrix) {
     Map<String, dynamic> det = calculateDeterminant(matrix);
 
-    String step = '';
-    step = '\\begin{vmatrix}';
+    String step = '\\begin{vmatrix}';
 
     for (int i = 0; i < matrix.length; i++) {
       for (int j = 0; j < matrix[i].length; j++) {
@@ -184,21 +183,56 @@ class Matrix {
     return steps;
   }
 
-  static List<String> transpose(List<List<num>> matrix1) {
+  static List<String> adjoint(List<List<num>> matrix) {
+    List<String> steps = <String>[];
+    List<List<num>> answerMatrix = <List<num>>[];
+    String step = '\\begin{vmatrix}';
+
+    for (int i = 0; i < matrix.length; i++) {
+      answerMatrix.add([]);
+      for (int j = 0; j < matrix[i].length; j++) {
+        Map<String, dynamic> cofactor = getCofactor(matrix, i, j);
+        Map<String, dynamic> det = determinant(cofactor['matrix']);
+
+        answerMatrix[i].add(det['answer']);
+
+        steps.add('C_{$i$j} = ${cofactor['step']}');
+        steps.addAll(det['steps']);
+      }
+    }
+
+    for (int i = 0; i < answerMatrix.length; i++) {
+      for (int j = 0; j < answerMatrix[i].length; j++) {
+        step += '${answerMatrix[i][j]}';
+
+        if (j != answerMatrix[i].length - 1) step += '&';
+      }
+
+      if (i != answerMatrix[i].length - 1) step += '\\\\';
+    }
+
+    step += '\\end{vmatrix}^T';
+    steps.add(step);
+    steps.addAll(transpose(matrix));
+
+    return steps;
+  }
+
+  static List<String> transpose(List<List<num>> matrix) {
     List<String> steps = <String>[];
     String answer = '\\begin{bmatrix}';
 
-    for (int i = 0; i < matrix1.length; i++) {
-      for (int j = 0; j < matrix1[i].length; j++) {
-        steps.add('C_{$i$j} = A_{$j$i} = ${matrix1[j][i]}');
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
+        steps.add('C_{$i$j} = A_{$j$i} = ${matrix[j][i]}');
 
-        if (j < matrix1[i].length - 1)
-          answer += (matrix1[j][i]).toString() + ' & ';
+        if (j < matrix[i].length - 1)
+          answer += (matrix[j][i]).toString() + ' & ';
         else
-          answer += (matrix1[j][i]).toString();
+          answer += (matrix[j][i]).toString();
       }
 
-      if (i < matrix1.length - 1) answer += ' \\\\ ';
+      if (i < matrix.length - 1) answer += ' \\\\ ';
     }
 
     answer += '\\end{bmatrix}';
