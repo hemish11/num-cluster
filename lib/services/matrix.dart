@@ -17,6 +17,24 @@ class Matrix {
     return matrix;
   }
 
+  static bool isValidMatrix(List<List<num>> matrix) {
+    bool check = false;
+    int n = matrix[0].length;
+
+    for (int i = 1; i < matrix.length; i++) {
+      if (matrix[i].length == n)
+        check = true;
+      else
+        check = false;
+    }
+
+    return check;
+  }
+
+  static bool isSquare(List<List<num>> matrix) => matrix.length == matrix[0].length;
+
+  static bool canDoProduct(List<List<num>> matrix1, List<List<num>> matrix2) => matrix1[0].length == matrix2.length;
+
   static List<String> add(List<List<num>> matrix1, List<List<num>> matrix2) {
     List<String> steps = <String>[];
     String answer = '\\begin{bmatrix}';
@@ -38,6 +56,55 @@ class Matrix {
     steps.add('\\text{So final answer becomes}' + answer);
 
     return steps;
+  }
+
+  static List<String> subtract(List<List<num>> matrix1, List<List<num>> matrix2) {
+    List<String> steps = <String>[];
+    String answer = '\\begin{bmatrix}';
+
+    for (int i = 0; i < matrix1.length; i++) {
+      for (int j = 0; j < matrix1[i].length; j++) {
+        steps.add('C_{$i$j} = ${matrix1[i][j]} - ${matrix2[i][j]} = ${matrix1[i][j] - matrix2[i][j]}');
+
+        if (j < matrix1[i].length - 1)
+          answer += (matrix1[i][j] - matrix2[i][j]).toString() + ' & ';
+        else
+          answer += (matrix1[i][j] - matrix2[i][j]).toString();
+      }
+
+      if (i < matrix1.length - 1) answer += ' \\\\ ';
+    }
+
+    answer += '\\end{bmatrix}';
+    steps.add('\\text{So final answer becomes}' + answer);
+
+    return steps;
+  }
+
+  static Map<String, dynamic> transpose(List<List<num>> matrix) {
+    List<String> steps = <String>[];
+    List<List<num>> answerMatrix = <List<num>>[];
+    String answer = '\\begin{bmatrix}';
+
+    for (int i = 0; i < matrix.length; i++) {
+      answerMatrix.add([]);
+      for (int j = 0; j < matrix[i].length; j++) {
+        answerMatrix[i].add(matrix[j][i]);
+        steps.add('C_{$i$j} = A_{$j$i} = ${matrix[j][i]}');
+
+        if (j < matrix[i].length - 1)
+          answer += (matrix[j][i]).toString() + ' & ';
+        else
+          answer += (matrix[j][i]).toString();
+      }
+
+      if (i < matrix.length - 1) answer += ' \\\\ ';
+    }
+
+    answer += '\\end{bmatrix}';
+    steps.add(answer);
+
+    return {'steps': steps, 'matrix': answerMatrix};
   }
 
   static Map<String, dynamic> getCofactor(List<List<num>> matrix, int p, int q) {
@@ -160,33 +227,12 @@ class Matrix {
     };
   }
 
-  static List<String> subtract(List<List<num>> matrix1, List<List<num>> matrix2) {
-    List<String> steps = <String>[];
-    String answer = '\\begin{bmatrix}';
-
-    for (int i = 0; i < matrix1.length; i++) {
-      for (int j = 0; j < matrix1[i].length; j++) {
-        steps.add('C_{$i$j} = ${matrix1[i][j]} - ${matrix2[i][j]} = ${matrix1[i][j] - matrix2[i][j]}');
-
-        if (j < matrix1[i].length - 1)
-          answer += (matrix1[i][j] - matrix2[i][j]).toString() + ' & ';
-        else
-          answer += (matrix1[i][j] - matrix2[i][j]).toString();
-      }
-
-      if (i < matrix1.length - 1) answer += ' \\\\ ';
-    }
-
-    answer += '\\end{bmatrix}';
-    steps.add('\\text{So final answer becomes}' + answer);
-
-    return steps;
-  }
-
-  static List<String> adjoint(List<List<num>> matrix) {
+  static Map<String, dynamic> adjoint(List<List<num>> matrix) {
+    Map<String, dynamic> transposeMatrix = <String, dynamic>{};
     List<String> steps = <String>[];
     List<List<num>> answerMatrix = <List<num>>[];
     String step = '\\begin{vmatrix}';
+    int sign = 1;
 
     for (int i = 0; i < matrix.length; i++) {
       answerMatrix.add([]);
@@ -194,9 +240,14 @@ class Matrix {
         Map<String, dynamic> cofactor = getCofactor(matrix, i, j);
         Map<String, dynamic> det = determinant(cofactor['matrix']);
 
-        answerMatrix[i].add(det['answer']);
+        answerMatrix[i].add(sign * det['answer']);
+        sign *= -1;
 
-        steps.add('C_{$i$j} = ${cofactor['step']}');
+        if (sign == 1) {
+          steps.add('C_{$i$j} = ${cofactor['step']}');
+        } else {
+          steps.add('C_{$i$j} = -(${cofactor['step']})');
+        }
         steps.addAll(det['steps']);
       }
     }
@@ -213,30 +264,41 @@ class Matrix {
 
     step += '\\end{vmatrix}^T';
     steps.add(step);
-    steps.addAll(transpose(matrix));
 
-    return steps;
+    transposeMatrix = transpose(answerMatrix);
+    steps.addAll(transpose(answerMatrix)['steps']);
+
+    return {'steps': steps, 'matrix': transposeMatrix['matrix']};
   }
 
-  static List<String> transpose(List<List<num>> matrix) {
+  static List<String> inverse(List<List<num>> matrix) {
     List<String> steps = <String>[];
-    String answer = '\\begin{bmatrix}';
+    Map<String, dynamic> adjMatrix = <String, dynamic>{};
+    Map<String, dynamic> det = <String, dynamic>{};
+    String finalStep = '\\begin{bmatrix}';
+
+    adjMatrix = adjoint(matrix);
+    det = determinant(matrix);
+    steps.addAll(adjMatrix['steps']);
+    steps.addAll(det['steps']);
 
     for (int i = 0; i < matrix.length; i++) {
       for (int j = 0; j < matrix[i].length; j++) {
-        steps.add('C_{$i$j} = A_{$j$i} = ${matrix[j][i]}');
+        steps.addAll([
+          'C_{$i$j} = \\frac{1}{${det['answer']}}*A_{$i$j} = \\frac{1}{${det['answer']}}*${adjMatrix['matrix'][i][j]}',
+          'C_{$i$j} = ${1 / det['answer'] * adjMatrix['matrix'][i][j]}',
+        ]);
 
         if (j < matrix[i].length - 1)
-          answer += (matrix[j][i]).toString() + ' & ';
+          finalStep += '${1 / det['answer'] * adjMatrix['matrix'][i][j]} &';
         else
-          answer += (matrix[j][i]).toString();
+          finalStep += '${1 / det['answer'] * adjMatrix['matrix'][i][j]}';
       }
 
-      if (i < matrix.length - 1) answer += ' \\\\ ';
+      if (i < matrix.length - 1) finalStep += ' \\\\ ';
     }
-
-    answer += '\\end{bmatrix}';
-    steps.add('\\text{So final answer becomes}' + answer);
+    finalStep += '\\end{bmatrix}';
+    steps.add(finalStep);
 
     return steps;
   }
