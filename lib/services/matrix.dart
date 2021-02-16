@@ -81,6 +81,44 @@ class Matrix {
     return steps;
   }
 
+  static List<String> product(List<List<num>> matrix1, List<List<num>> matrix2) {
+    List<String> steps = <String>[];
+    String step = '';
+    String finalStep = '\\begin{bmatrix}';
+    num a = 0;
+
+    for (int i = 0; i < matrix1.length; i++) {
+      for (int j = 0; j < matrix2[i].length; j++) {
+        step += 'C_${i + 1}${j + 1} = ';
+
+        for (int k = 0; k < matrix1[i].length; k++) {
+          a += matrix1[i][k] * matrix2[k][j];
+
+          if (k == matrix1[i].length - 1)
+            step += '(${matrix1[i][k]} * ${matrix2[k][j]})';
+          else
+            step += '(${matrix1[i][k]} * ${matrix2[k][j]}) +';
+        }
+
+        if (j < matrix2[i].length - 1)
+          finalStep += '$a & ';
+        else
+          finalStep += a.toString();
+
+        steps.add(step);
+        step = '';
+        a = 0;
+      }
+
+      if (i < matrix1.length - 1) finalStep += ' \\\\ ';
+    }
+
+    finalStep += '\\end{bmatrix}';
+    steps.add(finalStep);
+
+    return steps;
+  }
+
   static Map<String, dynamic> transpose(List<List<num>> matrix) {
     List<String> steps = <String>[];
     List<List<num>> answerMatrix = <List<num>>[];
