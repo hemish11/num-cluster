@@ -2,7 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:num_cluster/colors.dart';
 import 'package:num_cluster/screens/home_page/components/drawer_tile.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  Map<String, bool> tileList = {
+    'Addition': true,
+    'Subtraction': false,
+    'Product': false,
+    'Transpose': false,
+    'Adjoint': false,
+    'Determinant': false,
+    'Inverse': false
+  };
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -30,13 +45,20 @@ class CustomDrawer extends StatelessWidget {
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: CustomColors.primaryColor),
             ),
             const SizedBox(height: 30),
-            DrawerTile(text: 'Addition', isSelected: false),
-            DrawerTile(text: 'Subtraction', isSelected: false),
-            DrawerTile(text: 'Product', isSelected: false),
-            DrawerTile(text: 'Transpose', isSelected: true),
-            DrawerTile(text: 'Adjoint', isSelected: false),
-            DrawerTile(text: 'Determinant', isSelected: false),
-            DrawerTile(text: 'Inverse', isSelected: false),
+            for (int i = 0; i < tileList.length; i++)
+              DrawerTile(
+                text: tileList.keys.toList()[i],
+                isSelected: tileList.values.toList()[i],
+                onTap: () => setState(
+                  () {
+                    for (int a = 0; a < tileList.length; a++) {
+                      tileList[tileList.keys.toList()[a]] = false;
+                    }
+
+                    tileList[tileList.keys.toList()[i]] = true;
+                  },
+                ),
+              ),
           ],
         ),
       ),

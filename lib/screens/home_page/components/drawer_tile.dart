@@ -21,19 +21,26 @@ class DrawerTile extends StatelessWidget {
         color: isSelected ? CustomColors.blackColor : CustomColors.whiteColor,
         borderRadius: BorderRadius.circular(35),
       ),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 35.0),
-          child: AnimatedDefaultTextStyle(
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? CustomColors.whiteColor : CustomColors.blackColor,
-            ),
-            duration: const Duration(milliseconds: 300),
-            child: Text(
-              text,
+      child: Material(
+        color: CustomColors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(35),
+          onTap: onTap,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 35.0),
+              child: AnimatedDefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                  color: isSelected ? CustomColors.whiteColor : CustomColors.blackColor,
+                ),
+                duration: const Duration(milliseconds: 300),
+                child: Text(
+                  text,
+                ),
+              ),
             ),
           ),
         ),
