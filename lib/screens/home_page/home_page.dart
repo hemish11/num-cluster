@@ -15,12 +15,87 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isMatrixInputVisible = false;
 
+  Map<String, bool> drawerValues = {
+    'Addition': true,
+    'Subtraction': false,
+    'Product': false,
+    'Transpose': false,
+    'Adjoint': false,
+    'Determinant': false,
+    'Inverse': false
+  };
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: CustomDrawer(
+        drawerValues: drawerValues,
+        button1Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Addition'] = true;
+          },
+        ),
+        button2Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Subtraction'] = true;
+          },
+        ),
+        button3Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Product'] = true;
+          },
+        ),
+        button4Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Transpose'] = true;
+          },
+        ),
+        button5Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Adjoint'] = true;
+          },
+        ),
+        button6Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Determinant'] = true;
+          },
+        ),
+        button7Tap: () => setState(
+          () {
+            for (int a = 0; a < drawerValues.length; a++) {
+              drawerValues[drawerValues.keys.toList()[a]] = false;
+            }
+
+            drawerValues['Inverse'] = true;
+          },
+        ),
+      ),
       backgroundColor: CustomColors.whiteColor,
       body: Stack(
         children: [
@@ -80,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                               width: size.width * 0.9,
                               child: Center(
                                 child: Text(
-                                  'Addition',
+                                  drawerValues.keys.toList()[drawerValues.values.toList().indexOf(true)],
                                   style: TextStyle(
                                     fontSize: 28,
                                     color: CustomColors.whiteColor,
