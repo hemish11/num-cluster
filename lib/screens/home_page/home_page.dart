@@ -6,6 +6,7 @@ import 'package:num_cluster/screens/home_page/components/drawer_button.dart';
 import 'package:num_cluster/screens/home_page/components/matrix_input.dart';
 import 'package:num_cluster/screens/home_page/components/matrix_input_button.dart';
 import 'package:num_cluster/screens/solution_page/solution_page.dart';
+import 'package:num_cluster/services/matrix.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,7 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int matrix1RowCounter = 0;
+  int matrix1ColumnCounter = 0;
+  int matrix2RowCounter = 0;
+  int matrix2ColumnCounter = 0;
   bool isMatrixInputVisible = false;
+  bool isMatrix1 = true;
+  String matrix = '';
+  List<List<num>> matrix1 = <List<num>>[];
+  List<List<num>> matrix2 = <List<num>>[];
 
   Map<String, bool> drawerValues = {
     'Addition': true,
@@ -121,16 +130,22 @@ class _HomePageState extends State<HomePage> {
                   text: 'Input Matrix A',
                   onTap: () => setState(() {
                     isMatrixInputVisible = !isMatrixInputVisible;
+                    isMatrix1 = true;
                   }),
                 ),
                 const SizedBox(height: 30),
-                MatrixInputButton(
-                  text: 'Input Matrix B',
-                  hasBorder: true,
-                  onTap: () => setState(() {
-                    isMatrixInputVisible = !isMatrixInputVisible;
-                  }),
-                ),
+                if (drawerValues['Transpose'] ||
+                    drawerValues['Adjoint'] ||
+                    drawerValues['Determinant'] ||
+                    drawerValues['Inverse'])
+                  MatrixInputButton(
+                    text: 'Input Matrix B',
+                    hasBorder: true,
+                    onTap: () => setState(() {
+                      isMatrixInputVisible = !isMatrixInputVisible;
+                      isMatrix1 = false;
+                    }),
+                  ),
                 const SizedBox(height: 60),
                 Expanded(
                   child: Container(
@@ -208,7 +223,50 @@ class _HomePageState extends State<HomePage> {
           ),
           MatrixInput(
             isVisible: isMatrixInputVisible,
-            donePressed: () => setState(() => isMatrixInputVisible = !isMatrixInputVisible),
+            donePressed: () {
+              setState(() => isMatrixInputVisible = !isMatrixInputVisible);
+
+              if (isMatrix1) {
+                matrix1 = Matrix.toMatrix(matrix, matrix1RowCounter, matrix1ColumnCounter);
+              } else {
+                matrix2 = Matrix.toMatrix(matrix, matrix2RowCounter, matrix2ColumnCounter);
+              }
+            },
+            columnCounter: isMatrix1 ? matrix1ColumnCounter : matrix2ColumnCounter,
+            rowCounter: isMatrix1 ? matrix1RowCounter : matrix2RowCounter,
+            onChanged: (value) => matrix = value,
+            columnAddPressed: () => setState(() {
+              if (isMatrix1) {
+                matrix1ColumnCounter++;
+              } else {
+                matrix2ColumnCounter++;
+              }
+            }),
+            rowAddPressed: () => setState(() {
+              if (isMatrix1) {
+                matrix1RowCounter++;
+              } else {
+                matrix2RowCounter++;
+              }
+            }),
+            columnSubtractPressed: () => setState(() {
+              if (matrix1ColumnCounter != 0 || matrix2ColumnCounter != 0) {
+                if (isMatrix1) {
+                  matrix1ColumnCounter--;
+                } else {
+                  matrix2ColumnCounter--;
+                }
+              }
+            }),
+            rowSubtractPressed: () => setState(() {
+              if (matrix1RowCounter != 0 || matrix2RowCounter != 0) {
+                if (isMatrix1) {
+                  matrix1RowCounter--;
+                } else {
+                  matrix2RowCounter--;
+                }
+              }
+            }),
           ),
         ],
       ),

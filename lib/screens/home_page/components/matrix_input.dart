@@ -2,10 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:num_cluster/colors.dart';
 
 class MatrixInput extends StatelessWidget {
+  final int rowCounter;
+  final int columnCounter;
   final bool isVisible;
+  final ValueChanged<String> onChanged;
   final GestureTapCallback donePressed;
+  final GestureTapCallback rowAddPressed;
+  final GestureTapCallback rowSubtractPressed;
+  final GestureTapCallback columnAddPressed;
+  final GestureTapCallback columnSubtractPressed;
 
-  const MatrixInput({Key key, this.isVisible = false, this.donePressed}) : super(key: key);
+  const MatrixInput({
+    Key key,
+    this.isVisible = false,
+    this.donePressed,
+    this.onChanged,
+    this.rowAddPressed,
+    this.rowSubtractPressed,
+    this.columnAddPressed,
+    this.columnSubtractPressed,
+    this.rowCounter,
+    this.columnCounter,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +61,7 @@ class MatrixInput extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: TextField(
                           decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter Matrix'),
+                          onChanged: onChanged,
                           style: TextStyle(fontSize: 22),
                         ),
                       ),
@@ -53,9 +72,19 @@ class MatrixInput extends StatelessWidget {
                   const Spacer(),
                   Row(children: [
                     const SizedBox(width: 20),
-                    Counter(title: 'Rows'),
+                    Counter(
+                      title: 'Rows',
+                      counter: rowCounter,
+                      addPressed: rowAddPressed,
+                      subtractPressed: rowSubtractPressed,
+                    ),
                     const Spacer(),
-                    Counter(title: 'Columns'),
+                    Counter(
+                      title: 'Columns',
+                      counter: columnCounter,
+                      addPressed: columnAddPressed,
+                      subtractPressed: columnSubtractPressed,
+                    ),
                     const SizedBox(width: 20),
                   ]),
                   const SizedBox(height: 25),
@@ -96,8 +125,11 @@ class MatrixInput extends StatelessWidget {
 
 class Counter extends StatelessWidget {
   final String title;
+  final int counter;
+  final GestureTapCallback addPressed;
+  final GestureTapCallback subtractPressed;
 
-  const Counter({Key key, @required this.title}) : super(key: key);
+  const Counter({Key key, @required this.title, this.counter, this.addPressed, this.subtractPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -123,38 +155,52 @@ class Counter extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 3, color: CustomColors.primaryColor),
+              Material(
+                color: CustomColors.transparent,
+                child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.exposure_minus_1,
-                  size: 28,
-                  color: CustomColors.primaryColor,
+                  onTap: subtractPressed,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 3, color: CustomColors.primaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.exposure_minus_1,
+                      size: 28,
+                      color: CustomColors.primaryColor,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
                 child: Center(
                   child: Text(
-                    '1',
+                    counter.toString(),
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
                   ),
                 ),
               ),
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 3, color: CustomColors.primaryColor),
+              Material(
+                color: CustomColors.transparent,
+                child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.exposure_plus_1,
-                  size: 28,
-                  color: CustomColors.primaryColor,
+                  onTap: addPressed,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 3, color: CustomColors.primaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.exposure_plus_1,
+                      size: 28,
+                      color: CustomColors.primaryColor,
+                    ),
+                  ),
                 ),
               ),
             ],

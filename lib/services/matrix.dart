@@ -17,23 +17,11 @@ class Matrix {
     return matrix;
   }
 
-  static bool isValidMatrix(List<List<num>> matrix) {
-    bool check = false;
-    int n = matrix[0].length;
-
-    for (int i = 1; i < matrix.length; i++) {
-      if (matrix[i].length == n)
-        check = true;
-      else
-        check = false;
-    }
-
-    return check;
-  }
-
   static bool isSquare(List<List<num>> matrix) => matrix.length == matrix[0].length;
 
   static bool canDoProduct(List<List<num>> matrix1, List<List<num>> matrix2) => matrix1[0].length == matrix2.length;
+
+  static bool canConvertToMatrix(int row, int column, String matrix) => matrix.split(',').length == (row * column);
 
   static List<String> add(List<List<num>> matrix1, List<List<num>> matrix2) {
     List<String> steps = <String>[];
@@ -41,7 +29,7 @@ class Matrix {
 
     for (int i = 0; i < matrix1.length; i++) {
       for (int j = 0; j < matrix1[i].length; j++) {
-        steps.add('C_{$i$j} = ${matrix1[i][j]} + ${matrix2[i][j]} = ${matrix1[i][j] + matrix2[i][j]}');
+        steps.add('C_{${i + 1}${j + 1}} = ${matrix1[i][j]} + ${matrix2[i][j]} = ${matrix1[i][j] + matrix2[i][j]}');
 
         if (j < matrix1[i].length - 1)
           answer += (matrix1[i][j] + matrix2[i][j]).toString() + ' & ';
@@ -53,7 +41,7 @@ class Matrix {
     }
 
     answer += '\\end{bmatrix}';
-    steps.add('\\text{So final answer becomes}' + answer);
+    steps.add(answer);
 
     return steps;
   }
@@ -64,7 +52,7 @@ class Matrix {
 
     for (int i = 0; i < matrix1.length; i++) {
       for (int j = 0; j < matrix1[i].length; j++) {
-        steps.add('C_{$i$j} = ${matrix1[i][j]} - ${matrix2[i][j]} = ${matrix1[i][j] - matrix2[i][j]}');
+        steps.add('C_{${i + 1}${j + 1}} = ${matrix1[i][j]} - ${matrix2[i][j]} = ${matrix1[i][j] - matrix2[i][j]}');
 
         if (j < matrix1[i].length - 1)
           answer += (matrix1[i][j] - matrix2[i][j]).toString() + ' & ';
@@ -76,7 +64,7 @@ class Matrix {
     }
 
     answer += '\\end{bmatrix}';
-    steps.add('\\text{So final answer becomes}' + answer);
+    steps.add(answer);
 
     return steps;
   }
@@ -128,7 +116,7 @@ class Matrix {
       answerMatrix.add([]);
       for (int j = 0; j < matrix[i].length; j++) {
         answerMatrix[i].add(matrix[j][i]);
-        steps.add('C_{$i$j} = A_{$j$i} = ${matrix[j][i]}');
+        steps.add('C_{${i + 1}${j + 1}} = A_{${j + 1}${i + 1}} = ${matrix[j][i]}');
 
         if (j < matrix[i].length - 1)
           answer += (matrix[j][i]).toString() + ' & ';
@@ -282,9 +270,9 @@ class Matrix {
         sign *= -1;
 
         if (sign == 1) {
-          steps.add('C_{$i$j} = ${cofactor['step']}');
+          steps.add('C_{${i + 1}${j + 1}} = ${cofactor['step']}');
         } else {
-          steps.add('C_{$i$j} = -(${cofactor['step']})');
+          steps.add('C_{${i + 1}${j + 1}} = -(${cofactor['step']})');
         }
         steps.addAll(det['steps']);
       }
@@ -323,8 +311,8 @@ class Matrix {
     for (int i = 0; i < matrix.length; i++) {
       for (int j = 0; j < matrix[i].length; j++) {
         steps.addAll([
-          'C_{$i$j} = \\frac{1}{${det['answer']}}*A_{$i$j} = \\frac{1}{${det['answer']}}*${adjMatrix['matrix'][i][j]}',
-          'C_{$i$j} = ${1 / det['answer'] * adjMatrix['matrix'][i][j]}',
+          'C_{${i + 1}${j + 1}} = \\frac{1}{${det['answer']}}*A_{${i + 1}${j + 1}} = \\frac{1}{${det['answer']}}*${adjMatrix['matrix'][i][j]}',
+          'C_{${i + 1}${j + 1}} = ${1 / det['answer'] * adjMatrix['matrix'][i][j]}',
         ]);
 
         if (j < matrix[i].length - 1)
