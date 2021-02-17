@@ -138,6 +138,7 @@ class _SolutionPageState extends State<SolutionPage> {
             ),
             const Spacer(),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(width: 20),
                 Container(
@@ -170,14 +171,41 @@ class _SolutionPageState extends State<SolutionPage> {
                 ),
                 const Spacer(),
                 Container(
+                  height: 70,
+                  width: 70,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(35),
+                    border: Border.all(
+                      width: 4,
+                      color: CustomColors.primaryColor,
+                    ),
+                  ),
+                  child: Material(
+                    color: CustomColors.transparent,
+                    child: InkWell(
+                      onTap: () => _controller.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.linear,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                      child: Center(
+                        child: Text(
+                          'A',
+                          style: TextStyle(fontSize: 28, color: CustomColors.blackColor, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Container(
                   height: 60,
                   width: 150,
                   decoration: BoxDecoration(
+                    color: CustomColors.primaryColor,
                     borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      width: 3,
-                      color: CustomColors.primaryColor,
-                    ),
                   ),
                   child: Material(
                     color: CustomColors.transparent,
@@ -194,7 +222,7 @@ class _SolutionPageState extends State<SolutionPage> {
                       child: Center(
                         child: Text(
                           'Next',
-                          style: TextStyle(fontSize: 20, color: CustomColors.blackColor, fontWeight: FontWeight.w600),
+                          style: TextStyle(fontSize: 20, color: CustomColors.whiteColor, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
