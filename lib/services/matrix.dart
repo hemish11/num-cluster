@@ -1,6 +1,13 @@
+import 'dart:math';
+
 class Matrix {
   static List<List<num>> toMatrix(String matrixString, int row, int column) {
     int index = 0;
+
+    if (row == 1 && column == 1)
+      return [
+        [num.parse(matrixString)]
+      ];
 
     List<num> input = matrixString.split(',').map((e) => num.parse(e)).toList();
     List<List<num>> matrix = <List<num>>[];
@@ -15,6 +22,25 @@ class Matrix {
     }
 
     return matrix;
+  }
+
+  static String toLatex(List<List<num>> matrix, {bool isDeterminant = false}) {
+    String latex = isDeterminant ? '\\begin{vmatrix}' : '\\begin{bmatrix}';
+
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
+        if (j < matrix[i].length - 1)
+          latex += matrix[i][j].toString() + ' & ';
+        else
+          latex += matrix[i][j].toString();
+      }
+
+      if (i < matrix.length - 1) latex += ' \\\\ ';
+    }
+
+    latex += isDeterminant ? '\\end{vmatrix}' : '\\end{bmatrix}';
+
+    return latex;
   }
 
   static bool isSquare(List<List<num>> matrix) => matrix.length == matrix[0].length;
@@ -126,8 +152,6 @@ class Matrix {
 
     for (int i = 0; i < matrix.length; i++) {
       for (int j = 0; j < matrix[i].length; j++) {
-        print(a);
-        print(b);
         answerMatrix[a][b] = matrix[i][j];
         steps.add('C_{${a + 1}${b + 1}} = A_{${i + 1}${j + 1}} = ${matrix[i][j]}');
 
@@ -278,47 +302,56 @@ class Matrix {
   }
 
   static Map<String, dynamic> adjoint(List<List<num>> matrix) {
-    Map<String, dynamic> transposeMatrix = <String, dynamic>{};
-    List<String> steps = <String>[];
-    List<List<num>> answerMatrix = <List<num>>[];
-    String step = '\\begin{vmatrix}';
-    int sign = 1;
+    if (matrix.length == 1) {
+      return {
+        'steps': ['\\begin{bmatrix}${matrix[0][0]}\\end{bmatrix}'],
+        'matrix': [
+          [matrix[0][0]]
+        ]
+      };
+    } else {
+      Map<String, dynamic> transposeMatrix = <String, dynamic>{};
+      List<String> steps = <String>[];
+      List<List<num>> answerMatrix = <List<num>>[];
+      String step = '\\begin{bmatrix}';
 
-    for (int i = 0; i < matrix.length; i++) {
-      answerMatrix.add([]);
-      for (int j = 0; j < matrix[i].length; j++) {
-        Map<String, dynamic> cofactor = getCofactor(matrix, i, j);
-        Map<String, dynamic> det = determinant(cofactor['matrix']);
+      for (int i = 0; i < matrix.length; i++) {
+        answerMatrix.add([]);
+        for (int j = 0; j < matrix[i].length; j++) {
+          Map<String, dynamic> cofactor = getCofactor(matrix, i, j);
+          Map<String, dynamic> det = determinant(cofactor['matrix']);
 
-        answerMatrix[i].add(sign * det['answer']);
-        sign *= -1;
+          print(pow(-1, (i + 1) * (j + 1)));
 
-        if (sign == 1) {
-          steps.add('C_{${i + 1}${j + 1}} = ${cofactor['step']}');
-        } else {
-          steps.add('C_{${i + 1}${j + 1}} = -(${cofactor['step']})');
+          answerMatrix[i].add(pow(-1, i + j + 2) * det['answer']);
+
+          if (pow(-1, (i + j + 2)) == 1) {
+            steps.add('C_{${i + 1}${j + 1}} = ${cofactor['step']}');
+          } else {
+            steps.add('C_{${i + 1}${j + 1}} = -(${cofactor['step']})');
+          }
+          steps.addAll(det['steps']);
         }
-        steps.addAll(det['steps']);
-      }
-    }
-
-    for (int i = 0; i < answerMatrix.length; i++) {
-      for (int j = 0; j < answerMatrix[i].length; j++) {
-        step += '${answerMatrix[i][j]}';
-
-        if (j != answerMatrix[i].length - 1) step += '&';
       }
 
-      if (i != answerMatrix[i].length - 1) step += '\\\\';
+      for (int i = 0; i < answerMatrix.length; i++) {
+        for (int j = 0; j < answerMatrix[i].length; j++) {
+          step += '${answerMatrix[i][j]}';
+
+          if (j != answerMatrix[i].length - 1) step += '&';
+        }
+
+        if (i != answerMatrix[i].length - 1) step += '\\\\';
+      }
+
+      step += '\\end{bmatrix}^T';
+      steps.add(step);
+
+      transposeMatrix = transpose(answerMatrix);
+      steps.addAll(transpose(answerMatrix)['steps']);
+
+      return {'steps': steps, 'matrix': transposeMatrix['matrix']};
     }
-
-    step += '\\end{vmatrix}^T';
-    steps.add(step);
-
-    transposeMatrix = transpose(answerMatrix);
-    steps.addAll(transpose(answerMatrix)['steps']);
-
-    return {'steps': steps, 'matrix': transposeMatrix['matrix']};
   }
 
   static List<String> inverse(List<List<num>> matrix) {
