@@ -21,6 +21,9 @@ class Matrix {
 
   static bool canDoProduct(List<List<num>> matrix1, List<List<num>> matrix2) => matrix1[0].length == matrix2.length;
 
+  static bool areOfSameSize(List<List<num>> matrix1, List<List<num>> matrix2) =>
+      (matrix1.length == matrix2.length) && (matrix1[0].length == matrix2[0].length);
+
   static bool canConvertToMatrix(int row, int column, String matrix) => matrix.split(',').length == (row * column);
 
   static List<String> add(List<List<num>> matrix1, List<List<num>> matrix2) {
@@ -109,22 +112,43 @@ class Matrix {
 
   static Map<String, dynamic> transpose(List<List<num>> matrix) {
     List<String> steps = <String>[];
-    List<List<num>> answerMatrix = <List<num>>[];
+    List<List<num>> answerMatrix = List<List<num>>.generate(matrix[0].length, (int index) {
+      List temp = <num>[];
+      for (int i = 0; i < matrix.length; i++) {
+        temp.add(0);
+      }
+
+      return temp;
+    });
+    int a = 0;
+    int b = 0;
     String answer = '\\begin{bmatrix}';
 
     for (int i = 0; i < matrix.length; i++) {
-      answerMatrix.add([]);
       for (int j = 0; j < matrix[i].length; j++) {
-        answerMatrix[i].add(matrix[j][i]);
-        steps.add('C_{${i + 1}${j + 1}} = A_{${j + 1}${i + 1}} = ${matrix[j][i]}');
+        print(a);
+        print(b);
+        answerMatrix[a][b] = matrix[i][j];
+        steps.add('C_{${a + 1}${b + 1}} = A_{${i + 1}${j + 1}} = ${matrix[i][j]}');
 
-        if (j < matrix[i].length - 1)
-          answer += (matrix[j][i]).toString() + ' & ';
+        if (a == answerMatrix.length - 1) {
+          a = 0;
+          b++;
+        } else {
+          a++;
+        }
+      }
+    }
+
+    for (int i = 0; i < answerMatrix.length; i++) {
+      for (int j = 0; j < answerMatrix[i].length; j++) {
+        if (j < answerMatrix[i].length - 1)
+          answer += answerMatrix[i][j].toString() + ' & ';
         else
-          answer += (matrix[j][i]).toString();
+          answer += answerMatrix[i][j].toString();
       }
 
-      if (i < matrix.length - 1) answer += ' \\\\ ';
+      if (i < answerMatrix[i].length) answer += ' \\\\ ';
     }
 
     answer += '\\end{bmatrix}';
