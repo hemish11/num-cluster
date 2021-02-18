@@ -276,12 +276,18 @@ class _HomePageState extends State<HomePage> {
           MatrixInput(
             isVisible: isMatrixInputVisible,
             donePressed: () {
-              setState(() => isMatrixInputVisible = !isMatrixInputVisible);
-
               if (isMatrix1) {
-                matrix1 = Matrix.toMatrix(matrix, matrix1RowCounter, matrix1ColumnCounter);
+                if (Matrix.canConvertToMatrix(matrix1RowCounter, matrix1ColumnCounter, matrix)) {
+                  matrix1 = Matrix.toMatrix(matrix, matrix1RowCounter, matrix1ColumnCounter);
+
+                  setState(() => isMatrixInputVisible = !isMatrixInputVisible);
+                }
               } else {
-                matrix2 = Matrix.toMatrix(matrix, matrix2RowCounter, matrix2ColumnCounter);
+                if (Matrix.canConvertToMatrix(matrix1RowCounter, matrix1ColumnCounter, matrix)) {
+                  matrix2 = Matrix.toMatrix(matrix, matrix2RowCounter, matrix2ColumnCounter);
+
+                  setState(() => isMatrixInputVisible = !isMatrixInputVisible);
+                }
               }
             },
             columnCounter: isMatrix1 ? matrix1ColumnCounter : matrix2ColumnCounter,
