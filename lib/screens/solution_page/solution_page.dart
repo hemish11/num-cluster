@@ -4,6 +4,10 @@ import 'package:num_cluster/colors.dart';
 import 'package:num_cluster/screens/solution_page/components/back_button.dart';
 
 class SolutionPage extends StatefulWidget {
+  final List<String> steps;
+
+  const SolutionPage({Key key, this.steps}) : super(key: key);
+
   @override
   _SolutionPageState createState() => _SolutionPageState();
 }

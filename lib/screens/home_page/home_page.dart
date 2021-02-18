@@ -134,10 +134,7 @@ class _HomePageState extends State<HomePage> {
                   }),
                 ),
                 const SizedBox(height: 30),
-                if (drawerValues['Transpose'] ||
-                    drawerValues['Adjoint'] ||
-                    drawerValues['Determinant'] ||
-                    drawerValues['Inverse'])
+                if (drawerValues['Addition'] || drawerValues['Subtraction'] || drawerValues['Product'])
                   MatrixInputButton(
                     text: 'Input Matrix B',
                     hasBorder: true,
@@ -194,12 +191,67 @@ class _HomePageState extends State<HomePage> {
                             color: CustomColors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SolutionPage(),
-                                ),
-                              ),
+                              onTap: () {
+                                bool isValid = false;
+                                List<String> steps = <String>[];
+
+                                if (drawerValues['Addition']) {
+                                  if (matrix1 != [] && matrix2 != []) {
+                                    if (Matrix.areOfSameSize(matrix1, matrix2)) {
+                                      steps = Matrix.add(matrix1, matrix2);
+                                      isValid = true;
+                                    }
+                                  }
+                                } else if (drawerValues['Subtraction']) {
+                                  if (matrix1 != [] && matrix2 != []) {
+                                    if (Matrix.areOfSameSize(matrix1, matrix2)) {
+                                      steps = Matrix.subtract(matrix1, matrix2);
+                                      isValid = true;
+                                    }
+                                  }
+                                } else if (drawerValues['Product']) {
+                                  if (matrix1 != [] && matrix2 != []) {
+                                    if (Matrix.canDoProduct(matrix1, matrix2)) {
+                                      steps = Matrix.product(matrix1, matrix2);
+                                      isValid = true;
+                                    }
+                                  }
+                                } else if (drawerValues['Transpose']) {
+                                  if (matrix1 != []) {
+                                    steps = Matrix.transpose(matrix1)['steps'];
+                                    isValid = true;
+                                  }
+                                } else if (drawerValues['Adjoint']) {
+                                  if (matrix1 != []) {
+                                    if (Matrix.isSquare(matrix1)) {
+                                      steps = Matrix.adjoint(matrix1)['steps'];
+                                      isValid = true;
+                                    }
+                                  }
+                                } else if (drawerValues['Determinant']) {
+                                  if (matrix1 != []) {
+                                    if (Matrix.isSquare(matrix1)) {
+                                      steps = Matrix.determinant(matrix1)['steps'];
+                                      isValid = true;
+                                    }
+                                  }
+                                } else if (drawerValues['Inverse']) {
+                                  if (matrix1 != []) {
+                                    if (Matrix.isSquare(matrix1)) {
+                                      steps = Matrix.inverse(matrix1);
+                                      isValid = true;
+                                    }
+                                  }
+                                }
+
+                                if (isValid)
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SolutionPage(steps: steps),
+                                    ),
+                                  );
+                              },
                               child: Center(
                                 child: Text(
                                   'Calculate',
