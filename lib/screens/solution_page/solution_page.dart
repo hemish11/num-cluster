@@ -5,8 +5,9 @@ import 'package:num_cluster/screens/solution_page/components/back_button.dart';
 
 class SolutionPage extends StatefulWidget {
   final List<String> steps;
+  final String question;
 
-  const SolutionPage({Key key, this.steps}) : super(key: key);
+  const SolutionPage({Key key, this.steps, this.question}) : super(key: key);
 
   @override
   _SolutionPageState createState() => _SolutionPageState();
@@ -78,7 +79,7 @@ class _SolutionPageState extends State<SolutionPage> {
                   ),
                   const SizedBox(height: 20),
                   Math.tex(
-                    r'\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix} + \begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}',
+                    widget.question,
                     textStyle: TextStyle(fontSize: 26),
                   ),
                   const SizedBox(height: 25),
@@ -90,9 +91,9 @@ class _SolutionPageState extends State<SolutionPage> {
               height: size.height * 0.47,
               width: size.width * 0.95,
               child: PageView.builder(
-                itemCount: 3,
+                itemCount: widget.steps.length,
                 controller: _controller,
-                onPageChanged: (value) => currentIndex = value,
+                onPageChanged: (value) => setState(() => currentIndex = value),
                 itemBuilder: (context, index) => Container(
                   height: 150,
                   width: size.width * 0.9,
@@ -110,7 +111,7 @@ class _SolutionPageState extends State<SolutionPage> {
                       ),
                       const SizedBox(height: 25),
                       Math.tex(
-                        r'\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix} + \begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}',
+                        widget.steps[index],
                         textStyle: TextStyle(fontSize: 26, color: CustomColors.whiteColor, fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -121,7 +122,7 @@ class _SolutionPageState extends State<SolutionPage> {
             const SizedBox(height: 20),
             SizedBox(
               height: 10,
-              width: (20 * 20).toDouble(),
+              width: (20 * widget.steps.length).toDouble(),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 20,
@@ -129,10 +130,10 @@ class _SolutionPageState extends State<SolutionPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: AnimatedContainer(
                     height: 10,
-                    width: index == 2 ? 15 : 10,
+                    width: index == currentIndex ? 15 : 10,
                     duration: const Duration(milliseconds: 300),
                     decoration: BoxDecoration(
-                      color: index == 2 ? CustomColors.primaryColor : CustomColors.whiteColor,
+                      color: index == currentIndex ? CustomColors.primaryColor : CustomColors.whiteColor,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 2, color: CustomColors.primaryColor),
                     ),
@@ -157,12 +158,17 @@ class _SolutionPageState extends State<SolutionPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
-                        if (currentIndex != 0)
+                        if (currentIndex != 0) {
+                          setState(() {
+                            currentIndex--;
+                          });
+
                           _controller.animateToPage(
-                            --currentIndex,
+                            currentIndex,
                             duration: const Duration(milliseconds: 250),
                             curve: Curves.linear,
                           );
+                        }
                       },
                       child: Center(
                         child: Text(
@@ -188,11 +194,17 @@ class _SolutionPageState extends State<SolutionPage> {
                   child: Material(
                     color: CustomColors.transparent,
                     child: InkWell(
-                      onTap: () => _controller.animateToPage(
-                        2,
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.linear,
-                      ),
+                      onTap: () {
+                        setState(() {
+                          currentIndex = widget.steps.length - 1;
+                        });
+
+                        _controller.animateToPage(
+                          widget.steps.length - 1,
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.linear,
+                        );
+                      },
                       borderRadius: BorderRadius.circular(30),
                       child: Center(
                         child: Text(
@@ -216,12 +228,17 @@ class _SolutionPageState extends State<SolutionPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
-                        if (currentIndex != 2)
+                        if (currentIndex != widget.steps.length - 1) {
+                          setState(() {
+                            currentIndex++;
+                          });
+
                           _controller.animateToPage(
-                            ++currentIndex,
+                            currentIndex,
                             duration: const Duration(milliseconds: 250),
                             curve: Curves.linear,
                           );
+                        }
                       },
                       child: Center(
                         child: Text(
