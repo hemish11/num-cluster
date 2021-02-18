@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   bool isMatrixInputVisible = false;
   bool isMatrix1 = true;
   String matrix = '';
+  String question = '';
   List<List<num>> matrix1 = <List<num>>[];
   List<List<num>> matrix2 = <List<num>>[];
 
@@ -199,6 +200,8 @@ class _HomePageState extends State<HomePage> {
                                   if (matrix1 != [] && matrix2 != []) {
                                     if (Matrix.areOfSameSize(matrix1, matrix2)) {
                                       steps = Matrix.add(matrix1, matrix2);
+                                      question = '${Matrix.toLatex(matrix1)} + ${Matrix.toLatex(matrix2)}';
+
                                       isValid = true;
                                     }
                                   }
@@ -206,6 +209,8 @@ class _HomePageState extends State<HomePage> {
                                   if (matrix1 != [] && matrix2 != []) {
                                     if (Matrix.areOfSameSize(matrix1, matrix2)) {
                                       steps = Matrix.subtract(matrix1, matrix2);
+                                      question = '${Matrix.toLatex(matrix1)} - ${Matrix.toLatex(matrix2)}';
+
                                       isValid = true;
                                     }
                                   }
@@ -213,18 +218,24 @@ class _HomePageState extends State<HomePage> {
                                   if (matrix1 != [] && matrix2 != []) {
                                     if (Matrix.canDoProduct(matrix1, matrix2)) {
                                       steps = Matrix.product(matrix1, matrix2);
+                                      question = '${Matrix.toLatex(matrix1)} * ${Matrix.toLatex(matrix2)}';
+
                                       isValid = true;
                                     }
                                   }
                                 } else if (drawerValues['Transpose']) {
                                   if (matrix1 != []) {
                                     steps = Matrix.transpose(matrix1)['steps'];
+                                    question = '${Matrix.toLatex(matrix1)}^T';
+
                                     isValid = true;
                                   }
                                 } else if (drawerValues['Adjoint']) {
                                   if (matrix1 != []) {
                                     if (Matrix.isSquare(matrix1)) {
                                       steps = Matrix.adjoint(matrix1)['steps'];
+                                      question = 'adj ${Matrix.toLatex(matrix1)}';
+
                                       isValid = true;
                                     }
                                   }
@@ -232,6 +243,8 @@ class _HomePageState extends State<HomePage> {
                                   if (matrix1 != []) {
                                     if (Matrix.isSquare(matrix1)) {
                                       steps = Matrix.determinant(matrix1)['steps'];
+                                      question = '${Matrix.toLatex(matrix1, isDeterminant: true)}';
+
                                       isValid = true;
                                     }
                                   }
@@ -239,6 +252,8 @@ class _HomePageState extends State<HomePage> {
                                   if (matrix1 != []) {
                                     if (Matrix.isSquare(matrix1)) {
                                       steps = Matrix.inverse(matrix1);
+                                      question = '${Matrix.toLatex(matrix1)}^{-1}';
+
                                       isValid = true;
                                     }
                                   }
@@ -248,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SolutionPage(steps: steps),
+                                      builder: (context) => SolutionPage(question: question, steps: steps),
                                     ),
                                   );
                               },
