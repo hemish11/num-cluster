@@ -109,184 +109,180 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: CustomColors.whiteColor,
       body: Stack(
         children: [
-          SafeArea(
-            left: false,
-            right: false,
-            bottom: false,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    const DrawerButton(),
-                    const Spacer(),
-                    Text(
-                      'Num Cluster',
-                      style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700, color: CustomColors.primaryColor),
-                    ),
-                    const SizedBox(width: 40),
-                  ],
-                ),
-                const SizedBox(height: 30),
+          Column(
+            children: [
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  const DrawerButton(),
+                  const Spacer(),
+                  Text(
+                    'Num Cluster',
+                    style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700, color: CustomColors.primaryColor),
+                  ),
+                  const SizedBox(width: 40),
+                ],
+              ),
+              const SizedBox(height: 30),
+              MatrixInputButton(
+                text: 'Input Matrix A',
+                onTap: () => setState(() {
+                  isMatrixInputVisible = !isMatrixInputVisible;
+                  isMatrix1 = true;
+                }),
+              ),
+              const SizedBox(height: 30),
+              if (drawerValues['Addition'] || drawerValues['Subtraction'] || drawerValues['Product'])
                 MatrixInputButton(
-                  text: 'Input Matrix A',
+                  text: 'Input Matrix B',
+                  hasBorder: true,
                   onTap: () => setState(() {
                     isMatrixInputVisible = !isMatrixInputVisible;
-                    isMatrix1 = true;
+                    isMatrix1 = false;
                   }),
                 ),
-                const SizedBox(height: 30),
-                if (drawerValues['Addition'] || drawerValues['Subtraction'] || drawerValues['Product'])
-                  MatrixInputButton(
-                    text: 'Input Matrix B',
-                    hasBorder: true,
-                    onTap: () => setState(() {
-                      isMatrixInputVisible = !isMatrixInputVisible;
-                      isMatrix1 = false;
-                    }),
+              const SizedBox(height: 60),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: CustomColors.primaryColor,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
                   ),
-                const SizedBox(height: 60),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: CustomColors.primaryColor,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
-                    ),
-                    width: size.width,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 30),
-                        DottedBorder(
-                          color: CustomColors.whiteColor,
-                          dashPattern: [5, 7],
-                          strokeWidth: 4,
-                          radius: Radius.circular(20),
-                          borderType: BorderType.RRect,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: SizedBox(
-                              height: 100,
-                              width: size.width * 0.9,
-                              child: Center(
-                                child: Text(
-                                  drawerValues.keys.toList()[drawerValues.values.toList().indexOf(true)],
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    color: CustomColors.whiteColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                  width: size.width,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      DottedBorder(
+                        color: CustomColors.whiteColor,
+                        dashPattern: [5, 7],
+                        strokeWidth: 4,
+                        radius: Radius.circular(20),
+                        borderType: BorderType.RRect,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: SizedBox(
+                            height: 100,
+                            width: size.width * 0.9,
+                            child: Center(
+                              child: Text(
+                                drawerValues.keys.toList()[drawerValues.values.toList().indexOf(true)],
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  color: CustomColors.whiteColor,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const Spacer(),
-                        Container(
-                          height: 100,
-                          width: size.width * 0.85,
-                          decoration: BoxDecoration(
-                            color: CustomColors.primaryColor,
+                      ),
+                      const Spacer(),
+                      Container(
+                        height: 100,
+                        width: size.width * 0.85,
+                        decoration: BoxDecoration(
+                          color: CustomColors.primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(width: 4, color: CustomColors.whiteColor),
+                        ),
+                        child: Material(
+                          color: CustomColors.transparent,
+                          child: InkWell(
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(width: 4, color: CustomColors.whiteColor),
-                          ),
-                          child: Material(
-                            color: CustomColors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                bool isValid = false;
-                                List<String> steps = <String>[];
+                            onTap: () {
+                              bool isValid = false;
+                              List<String> steps = <String>[];
 
-                                if (drawerValues['Addition']) {
-                                  if (matrix1 != [] && matrix2 != []) {
-                                    if (Matrix.areOfSameSize(matrix1, matrix2)) {
-                                      steps = Matrix.add(matrix1, matrix2);
-                                      question = '${Matrix.toLatex(matrix1)} + ${Matrix.toLatex(matrix2)}';
-
-                                      isValid = true;
-                                    }
-                                  }
-                                } else if (drawerValues['Subtraction']) {
-                                  if (matrix1 != [] && matrix2 != []) {
-                                    if (Matrix.areOfSameSize(matrix1, matrix2)) {
-                                      steps = Matrix.subtract(matrix1, matrix2);
-                                      question = '${Matrix.toLatex(matrix1)} - ${Matrix.toLatex(matrix2)}';
-
-                                      isValid = true;
-                                    }
-                                  }
-                                } else if (drawerValues['Product']) {
-                                  if (matrix1 != [] && matrix2 != []) {
-                                    if (Matrix.canDoProduct(matrix1, matrix2)) {
-                                      steps = Matrix.product(matrix1, matrix2);
-                                      question = '${Matrix.toLatex(matrix1)} * ${Matrix.toLatex(matrix2)}';
-
-                                      isValid = true;
-                                    }
-                                  }
-                                } else if (drawerValues['Transpose']) {
-                                  if (matrix1 != []) {
-                                    steps = Matrix.transpose(matrix1)['steps'];
-                                    question = '${Matrix.toLatex(matrix1)}^T';
+                              if (drawerValues['Addition']) {
+                                if (matrix1 != [] && matrix2 != []) {
+                                  if (Matrix.areOfSameSize(matrix1, matrix2)) {
+                                    steps = Matrix.add(matrix1, matrix2);
+                                    question = '${Matrix.toLatex(matrix1)} + ${Matrix.toLatex(matrix2)}';
 
                                     isValid = true;
                                   }
-                                } else if (drawerValues['Adjoint']) {
-                                  if (matrix1 != []) {
-                                    if (Matrix.isSquare(matrix1)) {
-                                      steps = Matrix.adjoint(matrix1)['steps'];
-                                      question = 'adj ${Matrix.toLatex(matrix1)}';
+                                }
+                              } else if (drawerValues['Subtraction']) {
+                                if (matrix1 != [] && matrix2 != []) {
+                                  if (Matrix.areOfSameSize(matrix1, matrix2)) {
+                                    steps = Matrix.subtract(matrix1, matrix2);
+                                    question = '${Matrix.toLatex(matrix1)} - ${Matrix.toLatex(matrix2)}';
 
-                                      isValid = true;
-                                    }
-                                  }
-                                } else if (drawerValues['Determinant']) {
-                                  if (matrix1 != []) {
-                                    if (Matrix.isSquare(matrix1)) {
-                                      steps = Matrix.determinant(matrix1)['steps'];
-                                      question = '${Matrix.toLatex(matrix1, isDeterminant: true)}';
-
-                                      isValid = true;
-                                    }
-                                  }
-                                } else if (drawerValues['Inverse']) {
-                                  if (matrix1 != []) {
-                                    if (Matrix.isSquare(matrix1)) {
-                                      steps = Matrix.inverse(matrix1);
-                                      question = '${Matrix.toLatex(matrix1)}^{-1}';
-
-                                      isValid = true;
-                                    }
+                                    isValid = true;
                                   }
                                 }
+                              } else if (drawerValues['Product']) {
+                                if (matrix1 != [] && matrix2 != []) {
+                                  if (Matrix.canDoProduct(matrix1, matrix2)) {
+                                    steps = Matrix.product(matrix1, matrix2);
+                                    question = '${Matrix.toLatex(matrix1)} * ${Matrix.toLatex(matrix2)}';
 
-                                if (isValid)
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SolutionPage(question: question, steps: steps),
-                                    ),
-                                  );
-                              },
-                              child: Center(
-                                child: Text(
-                                  'Calculate',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    color: CustomColors.whiteColor,
-                                    fontWeight: FontWeight.w700,
+                                    isValid = true;
+                                  }
+                                }
+                              } else if (drawerValues['Transpose']) {
+                                if (matrix1 != []) {
+                                  steps = Matrix.transpose(matrix1)['steps'];
+                                  question = '${Matrix.toLatex(matrix1)}^T';
+
+                                  isValid = true;
+                                }
+                              } else if (drawerValues['Adjoint']) {
+                                if (matrix1 != []) {
+                                  if (Matrix.isSquare(matrix1)) {
+                                    steps = Matrix.adjoint(matrix1)['steps'];
+                                    question = 'adj ${Matrix.toLatex(matrix1)}';
+
+                                    isValid = true;
+                                  }
+                                }
+                              } else if (drawerValues['Determinant']) {
+                                if (matrix1 != []) {
+                                  if (Matrix.isSquare(matrix1)) {
+                                    steps = Matrix.determinant(matrix1)['steps'];
+                                    question = '${Matrix.toLatex(matrix1, isDeterminant: true)}';
+
+                                    isValid = true;
+                                  }
+                                }
+                              } else if (drawerValues['Inverse']) {
+                                if (matrix1 != []) {
+                                  if (Matrix.isSquare(matrix1)) {
+                                    steps = Matrix.inverse(matrix1);
+                                    question = '${Matrix.toLatex(matrix1)}^{-1}';
+
+                                    isValid = true;
+                                  }
+                                }
+                              }
+
+                              if (isValid)
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SolutionPage(question: question, steps: steps),
                                   ),
+                                );
+                            },
+                            child: Center(
+                              child: Text(
+                                'Calculate',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  color: CustomColors.whiteColor,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           MatrixInput(
             isVisible: isMatrixInputVisible,
@@ -304,6 +300,8 @@ class _HomePageState extends State<HomePage> {
                   setState(() => isMatrixInputVisible = !isMatrixInputVisible);
                 }
               }
+
+              FocusScope.of(context).unfocus();
             },
             columnCounter: isMatrix1 ? matrix1ColumnCounter : matrix2ColumnCounter,
             rowCounter: isMatrix1 ? matrix1RowCounter : matrix2RowCounter,
