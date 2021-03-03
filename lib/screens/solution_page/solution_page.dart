@@ -53,6 +53,7 @@ class _SolutionPageState extends State<SolutionPage> {
           ),
           Container(
             width: size.width * 0.9,
+            height: 150,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             decoration: BoxDecoration(
               color: CustomColors.whiteColor,
@@ -62,25 +63,30 @@ class _SolutionPageState extends State<SolutionPage> {
                 width: 5,
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  'Question',
-                  style: TextStyle(
-                    fontSize: 32,
-                    color: CustomColors.primaryColor,
-                    fontWeight: FontWeight.w600,
+            child: InteractiveViewer(
+              maxScale: 1.0,
+              minScale: 1.0,
+              constrained: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'Question',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: CustomColors.primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Math.tex(
-                  widget.question,
-                  textStyle: TextStyle(fontSize: 26),
-                ),
-                const SizedBox(height: 25),
-              ],
+                  const SizedBox(height: 20),
+                  Math.tex(
+                    widget.question,
+                    textStyle: TextStyle(fontSize: 26),
+                  ),
+                  const SizedBox(height: 25),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 25),

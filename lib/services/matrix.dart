@@ -106,15 +106,22 @@ class Matrix {
 
     for (int i = 0; i < matrix1.length; i++) {
       for (int j = 0; j < matrix2[i].length; j++) {
-        step += 'C_${i + 1}${j + 1} = ';
+        step += 'C_{${i + 1}${j + 1}} = ';
 
         for (int k = 0; k < matrix1[i].length; k++) {
           a += matrix1[i][k] * matrix2[k][j];
 
-          if (k == matrix1[i].length - 1)
-            step += '(${matrix1[i][k]} * ${matrix2[k][j]})';
-          else
-            step += '(${matrix1[i][k]} * ${matrix2[k][j]}) +';
+          if (k == matrix1[i].length - 1) {
+            if (matrix2[k][j] < 0)
+              step += '(${matrix1[i][k]} * (${matrix2[k][j]}))';
+            else
+              step += '(${matrix1[i][k]} * ${matrix2[k][j]})';
+          } else {
+            if (matrix2[k][j] < 0)
+              step += '(${matrix1[i][k]} * (${matrix2[k][j]})) +';
+            else
+              step += '(${matrix1[i][k]} * ${matrix2[k][j]}) +';
+          }
         }
 
         if (j < matrix2[i].length - 1)

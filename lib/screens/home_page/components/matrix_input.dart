@@ -6,6 +6,7 @@ class MatrixInput extends StatelessWidget {
   final int columnCounter;
   final bool isVisible;
   final ValueChanged<String> onChanged;
+  final GestureTapCallback cancelPressed;
   final GestureTapCallback donePressed;
   final GestureTapCallback rowAddPressed;
   final GestureTapCallback rowSubtractPressed;
@@ -23,6 +24,7 @@ class MatrixInput extends StatelessWidget {
     this.columnSubtractPressed,
     this.rowCounter,
     this.columnCounter,
+    this.cancelPressed,
   }) : super(key: key);
 
   @override
@@ -40,7 +42,7 @@ class MatrixInput extends StatelessWidget {
           color: CustomColors.blackColor.withAlpha(140),
           child: Center(
             child: Container(
-              height: 380,
+              height: 460,
               width: size.width * 0.8,
               decoration: BoxDecoration(
                 color: CustomColors.whiteColor,
@@ -48,6 +50,28 @@ class MatrixInput extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  const SizedBox(height: 20),
+                  Material(
+                    color: CustomColors.transparent,
+                    child: InkWell(
+                      onTap: cancelPressed,
+                      borderRadius: BorderRadius.circular(35),
+                      child: Container(
+                        height: 70,
+                        width: size.width * 0.7,
+                        decoration: BoxDecoration(
+                          color: CustomColors.primaryColor,
+                          borderRadius: BorderRadius.circular(35),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Back',
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: CustomColors.whiteColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   Container(
                     height: 70,

@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 30),
               MatrixInputButton(
                 text: 'Input Matrix A',
+                hasBorder: !isMatrix1,
                 onTap: () => setState(() {
                   isMatrixInputVisible = !isMatrixInputVisible;
                   isMatrix1 = true;
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               if (drawerValues['Addition'] || drawerValues['Subtraction'] || drawerValues['Product'])
                 MatrixInputButton(
                   text: 'Input Matrix B',
-                  hasBorder: true,
+                  hasBorder: isMatrix1,
                   onTap: () => setState(() {
                     isMatrixInputVisible = !isMatrixInputVisible;
                     isMatrix1 = false;
@@ -152,24 +153,33 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       const SizedBox(height: 30),
-                      DottedBorder(
-                        color: CustomColors.whiteColor,
-                        dashPattern: [5, 7],
-                        strokeWidth: 4,
-                        radius: Radius.circular(20),
-                        borderType: BorderType.RRect,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: SizedBox(
-                            height: 100,
-                            width: size.width * 0.9,
-                            child: Center(
-                              child: Text(
-                                drawerValues.keys.toList()[drawerValues.values.toList().indexOf(true)],
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  color: CustomColors.whiteColor,
-                                  fontWeight: FontWeight.w600,
+                      Material(
+                        color: CustomColors.transparent,
+                        child: Builder(
+                          builder: (context) => InkWell(
+                            onTap: () => Scaffold.of(context).openDrawer(),
+                            borderRadius: BorderRadius.circular(20),
+                            child: DottedBorder(
+                              color: CustomColors.whiteColor,
+                              dashPattern: [5, 7],
+                              strokeWidth: 4,
+                              radius: Radius.circular(20),
+                              borderType: BorderType.RRect,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: SizedBox(
+                                  height: 100,
+                                  width: size.width * 0.9,
+                                  child: Center(
+                                    child: Text(
+                                      drawerValues.keys.toList()[drawerValues.values.toList().indexOf(true)],
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        color: CustomColors.whiteColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -286,6 +296,11 @@ class _HomePageState extends State<HomePage> {
           ),
           MatrixInput(
             isVisible: isMatrixInputVisible,
+            cancelPressed: () {
+              setState(() => isMatrixInputVisible = !isMatrixInputVisible);
+
+              FocusScope.of(context).unfocus();
+            },
             donePressed: () {
               if (isMatrix1) {
                 if (Matrix.canConvertToMatrix(matrix1RowCounter, matrix1ColumnCounter, matrix)) {
